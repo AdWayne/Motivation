@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Контакт — Motivation Hub</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; background:#eef7ff; color:#013045; }
+    .container { max-width:720px; margin:40px auto; padding:20px; }
+    header { text-align:center; padding:20px 0; }
+    form { background:white; padding:20px; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.08); display:flex; flex-direction:column; gap:12px }
+    input, textarea, button { padding:12px; border-radius:8px; border:1px solid #cfe7ff; font-size:16px }
+    button { background:#5aa2ff; color:white; border:none; cursor:pointer }
+    .meta { display:flex; gap:10px; justify-content:space-between; align-items:center }
+    .note { background:#fff7e6; padding:12px; border-radius:8px; border:1px solid #ffe7b3 }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Кері байланыс</h1>
+      <p>Сұрақтар, ұсыныстар немесе серіктестік үшін төмендегі форманы толтырыңыз.</p>
+    </header>
+
+    <form id="contactForm">
+      <input id="name" type="text" placeholder="Аты-жөніңіз" required value="Аты-жөніңіз" />
+      <input id="email" type="email" placeholder="Email (мысал: name@mail.com)" required value="" />
+      <input id="subject" type="text" placeholder="Тақырып" required value="Сайт туралы пікір" />
+      <textarea id="message" rows="6" placeholder="Хабарламаңызды жазыңыз...">Сәлем! Сіздердің сайт өте жақсы, бірақ тағы да мазмұн қосыңызшы.</textarea>
+
+      <div class="meta">
+        <div class="note">Телефон: +7 778 615 8907</div>
+        <div>
+          <button type="submit">Жіберу</button>
+        </div>
+      </div>
+    </form>
+
+    <p style="margin-top:16px;">Немесе тікелей хат жібергіңіз келсе: <a href="alpamusstalker06@gmail.com">alpamusstalker06@gmail.com</a></p>
+
+    <script>
+    
+      const form = document.getElementById('contactForm');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = {
+          name: document.getElementById('name').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          subject: document.getElementById('subject').value.trim(),
+          message: document.getElementById('message').value.trim(),
+          date: new Date().toISOString()
+        };
+
+  
+        if (!data.name || !data.email || !data.subject) {
+          alert('Барлық міндетті өрістерді толтырыңыз.');
+          return;
+        }
+
+
+        const submissions = JSON.parse(localStorage.getItem('mh_submissions') || '[]');
+        submissions.push(data);
+        localStorage.setItem('mh_submissions', JSON.stringify(submissions));
+
+
+        alert('Хабарлама жіберілді! Біз сізбен байланысамыз.');
+        document.getElementById('message').value = '';
+      });
+
+      const shareLink = () => {
+        const url = window.location.href;
+        if (navigator.share) navigator.share({ title: 'Контакт — Motivation Hub', url }).catch(()=>{});
+        else navigator.clipboard.writeText(url).then(()=> alert('Сілтеме буферге көшірілді'));
+      };
+
+
+      window.addEventListener('keydown', (ev) => { if (ev.ctrlKey && ev.key.toLowerCase() === 's') { ev.preventDefault(); shareLink(); } });
+    </script>
+  </div>
+</body>
+</html>
